@@ -1,0 +1,28 @@
+<!-- chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Chat Forum</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="chat-header">
+        <h2>Group Chat Forum</h2>
+        <div class="user-info">
+            <span id="currentUsername"></span>
+            <button onclick="editUsername()">Edit Username</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div id="chatBox" class="chat-box"></div>
+
+    <div class="chat-input">
+        <input type="text" id="messageInput" placeholder="Type your message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
