@@ -23,7 +23,13 @@
 
   <label>Your Name:</label><br>
   <input type="text" id="username"><br><br>
-  <button onclick="saveName()">Save Name</button>
+  <button onclick="saveName()">Save Name</button><br><br>
+
+  <label>Upload Profile Picture</label><br>
+  <input type="file" accept="image/*" onchange="uploadAvatar(this)"><br><br>
+  <img id="avatarImg" class="avatar"><br><br>
+
+  <div class="stats" id="statsBox"></div>
 
   <h2>Your Questions</h2>
   <div id="yourQuestions"></div>
@@ -32,14 +38,29 @@
 <script src="app.js"></script>
 <script>
 const usernameInput = document.getElementById('username');
+const avatarImg = document.getElementById('avatarImg');
 const storedName = localStorage.getItem('username');
+const storedAvatar = localStorage.getItem('avatar');
+
 if (storedName) usernameInput.value = storedName;
+if (storedAvatar) avatarImg.src = storedAvatar;
 
 function saveName() {
   const name = usernameInput.value.trim();
   if (!name) return alert('Enter your name');
   localStorage.setItem('username', name);
   renderQuestions();
+  renderStats();
+}
+
+function uploadAvatar(input) {
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    localStorage.setItem('avatar', e.target.result);
+    avatarImg.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 
 function renderQuestions() {
@@ -72,9 +93,25 @@ function renderQuestions() {
   });
 }
 
+function renderStats() {
+  const stats = document.getElementById('statsBox');
+  const name = localStorage.getItem('username');
+  const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+  const mine = questions.filter(q => q.author === name);
+  const answers = questions.reduce((acc, q) => {
+    acc += q.answers.filter(a => a.author === name).length;
+    return acc;
+  }, 0);
+
+  stats.innerHTML = `
+    <p><strong>Questions Posted:</strong> ${mine.length}</p>
+    <p><strong>Answers Given:</strong> ${answers}</p>
+  `;
+}
+
 renderQuestions();
+renderStats();
 </script>
 
 </body>
 </html>
-
