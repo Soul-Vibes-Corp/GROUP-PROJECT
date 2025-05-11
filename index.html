@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat - CodeChat Forum</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeChat Forum</title>
+  <link rel="stylesheet" href="style.css">
   
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
@@ -15,7 +15,7 @@
   <header>
     <div class="logo">🔥 CodeChat Forum</div>
     <div class="user-info">
-      <img id="user-profile-pic" alt="Profile Picture" />
+      <img id="user-profile-pic" alt="Profile Picture">
       <span id="user-name">Welcome, User!</span>
       <button onclick="editUsername()">Edit Username</button>
       <button onclick="logout()">Log Out</button>
@@ -26,14 +26,14 @@
     <div id="chat-container">
       <div id="chat-box"></div>
       <div id="chat-input">
-        <input type="text" id="chat-message" placeholder="Type a message..." />
+        <input type="text" id="chat-message" placeholder="Type a message...">
         <button onclick="sendMessage()">Send</button>
       </div>
     </div>
   </main>
 
   <script>
-    // Firebase Config and Initialization
+    // Firebase config and initialization
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_AUTH_DOMAIN",
@@ -42,12 +42,12 @@
       messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
       appId: "YOUR_APP_ID"
     };
+    
     const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    // User info retrieval and chat functionality
+    
+    // Handle user authentication
     auth.onAuthStateChanged(user => {
       if (user) {
         const userDoc = db.collection('users').doc(user.uid);
@@ -57,9 +57,8 @@
           document.getElementById('user-profile-pic').src = userData.profilePicture;
         });
 
-        // Load chat messages
-        const chatRef = db.collection('chats');
-        chatRef.orderBy('timestamp').onSnapshot(snapshot => {
+        // Load messages
+        db.collection('chats').orderBy('timestamp').onSnapshot(snapshot => {
           document.getElementById('chat-box').innerHTML = '';
           snapshot.forEach(doc => {
             const msgData = doc.data();
@@ -68,38 +67,40 @@
             document.getElementById('chat-box').appendChild(messageElement);
           });
         });
-
-        // Send message
-        window.sendMessage = function() {
-          const message = document.getElementById('chat-message').value;
-          if (message) {
-            db.collection('chats').add({
-              userName: user.displayName || userData.fullName,
-              message: message,
-              timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            document.getElementById('chat-message').value = '';
-          }
-        };
-
-        // Edit username
-        window.editUsername = function() {
-          const newUsername = prompt("Enter your new username:");
-          if (newUsername) {
-            userDoc.update({ fullName: newUsername });
-          }
-        };
-
-        // Log out functionality
-        window.logout = function() {
-          auth.signOut().then(() => {
-            window.location.href = 'login.html';
-          });
-        };
       } else {
-        window.location.href = 'login.html'; // Redirect to login if not authenticated
+        window.location.href = 'login.html'; // Redirect to login page if not logged in
       }
     });
+    
+    // Send message function
+    function sendMessage() {
+      const message = document.getElementById('chat-message').value;
+      if (message) {
+        db.collection('chats').add({
+          userName: firebase.auth().currentUser.displayName,
+          message: message,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        document.getElementById('chat-message').value = '';
+      }
+    }
+    
+    // Edit username function
+    function editUsername() {
+      const newUsername = prompt("Enter your new username:");
+      if (newUsername) {
+        const user = firebase.auth().currentUser;
+        const userDoc = db.collection('users').doc(user.uid);
+        userDoc.update({ fullName: newUsername });
+      }
+    }
+    
+    // Log out function
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        window.location.href = 'login.html'; // Redirect to login page
+      });
+    }
   </script>
 </body>
 </html>
