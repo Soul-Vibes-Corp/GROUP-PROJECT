@@ -1,6 +1,6 @@
 // Firebase Config
 const firebaseConfig = {
-   apiKey: "AIzaSyA0tfVT75kWle3uwz1HouHRQdEWyzW1YNU",
+  apiKey: "AIzaSyA0tfVT75kWle3uwz1HouHRQdEWyzW1YNU",
   authDomain: "chat-code-forum.firebaseapp.com",
   projectId: "chat-code-forum",
   storageBucket: "chat-code-forum.firebasestorage.app",
@@ -15,7 +15,6 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 
 // ========== Auth Functions ==========
-
 function login() {
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
