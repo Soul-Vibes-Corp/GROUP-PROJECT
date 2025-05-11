@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - CodeChat Forum</title>
-  <link rel="stylesheet" href="login.css" />
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <section id="auth-section">
-    <h1>Welcome to CodeChat Forum</h1>
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-
-    <!-- Username input for Sign Up only -->
-    <input type="text" id="username" placeholder="Username (for Sign Up)" />
-
-    <button onclick="login()">Log In</button>
-    <button onclick="signup()">Sign Up</button>
-  </section>
-
+  <div class="container">
+    <h2>Create Your Account</h2>
+    <form id="sign-up-form">
+      <input type="text" id="full-name" placeholder="Full Name" required><br>
+      <input type="date" id="dob" required><br>
+      <input type="file" id="profile-picture" accept="image/*" required><br>
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore.js"></script>
   <script src="script.js"></script>
-
 </body>
 </html>
