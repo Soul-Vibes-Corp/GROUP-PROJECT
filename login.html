@@ -1,0 +1,64 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Join CodeChat Forum</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+</head>
+<body class="login-page">
+  <div class="login-container">
+    <h1>Welcome to CodeChat Forum</h1>
+    <p>Sign up to ask questions and share ideas.</p>
+
+    <input type="text" id="fullName" placeholder="Full Name">
+    <input type="date" id="dob" placeholder="Date of Birth">
+    <input type="file" id="profilePic">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="register()">Sign Up</button>
+  </div>
+
+<script src="firebase.js"></script>
+<script>
+  function register() {
+    const fullName = document.getElementById('fullName').value;
+    const dob = document.getElementById('dob').value;
+    const profilePicFile = document.getElementById('profilePic').files[0];
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (!fullName || !dob || !profilePicFile || !email || !password) {
+      alert('Please fill all fields!');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const profilePicURL = reader.result;
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(cred => {
+          return firebase.firestore().collection('users').doc(cred.user.uid).set({
+            fullName,
+            dob,
+            profilePicture: profilePicURL,
+            email
+          });
+        })
+        .then(() => {
+          window.location.href = 'index.html';
+        })
+        .catch(err => alert(err.message));
+    };
+    reader.readAsDataURL(profilePicFile);
+  }
+</script>
+
+</body>
+</html>
