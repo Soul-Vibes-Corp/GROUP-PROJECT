@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodeChat Forum</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js"></script>
+  <!-- Prism.js for code highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+</head>
+<body>
+
+  <h1>🔥 CodeChat Forum</h1>
+
+  <!-- Auth -->
+  <div id="auth-section">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="signup()">Sign Up</button>
+    <button onclick="login()">Log In</button>
+    <button onclick="logout()">Log Out</button>
+  </div>
+
+  <!-- Profile -->
+  <div id="profile-section" class="hidden">
+    <h2>👤 My Profile</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="file" id="profile-pic">
+    <button onclick="updateProfile()">Save Profile</button>
+    <p id="my-profile-info"></p>
+  </div>
+
+  <!-- Users List -->
+  <div id="users-section" class="hidden">
+    <h2>📋 Users</h2>
+    <ul id="users-list"></ul>
+  </div>
+
+  <!-- Chat -->
+  <div id="chat-section" class="hidden">
+    <h2>💬 Chat with <span id="chat-with"></span></h2>
+    <div id="chat-box"></div>
+    <input type="text" id="chat-message" placeholder="Type a message">
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <!-- Code Share -->
+  <div id="code-section" class="hidden">
+    <h2>💻 Share Code Snippet</h2>
+    <textarea id="code-snippet" placeholder="Write your code here..."></textarea><br>
+    <button onclick="shareCode()">Share Code</button>
+    <div id="shared-codes"></div>
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
