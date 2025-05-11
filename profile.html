@@ -1,1 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodeForum — Your Profile</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo"><strong>CodeForum</strong></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="ask.html">Ask</a>
+    <a href="profile.html">Profile</a>
+    <button onclick="toggleTheme()">🌓</button>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>Your Profile</h1>
+
+  <label>Your Name:</label><br>
+  <input type="text" id="username"><br><br>
+  <button onclick="saveName()">Save Name</button>
+
+  <h2>Your Questions</h2>
+  <div id="yourQuestions"></div>
+</div>
+
+<script src="app.js"></script>
+<script>
+const usernameInput = document.getElementById('username');
+const storedName = localStorage.getItem('username');
+if (storedName) usernameInput.value = storedName;
+
+function saveName() {
+  const name = usernameInput.value.trim();
+  if (!name) return alert('Enter your name');
+  localStorage.setItem('username', name);
+  renderQuestions();
+}
+
+function renderQuestions() {
+  const yourQ = document.getElementById('yourQuestions');
+  const name = localStorage.getItem('username');
+  const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+  const mine = questions.filter(q => q.author === name);
+
+  yourQ.innerHTML = '';
+
+  if (!name) {
+    yourQ.innerHTML = '<p><em>Enter your name to see your questions.</em></p>';
+    return;
+  }
+
+  if (mine.length === 0) {
+    yourQ.innerHTML = '<p><em>No questions posted yet.</em></p>';
+    return;
+  }
+
+  mine.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <h3>${q.title}</h3>
+      <p>${q.description}</p>
+      <small><strong>${q.answers.length}</strong> answers</small>
+    `;
+    yourQ.appendChild(div);
+  });
+}
+
+renderQuestions();
+</script>
+
+</body>
+</html>
 
