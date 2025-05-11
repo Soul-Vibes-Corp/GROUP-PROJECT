@@ -20,19 +20,26 @@
 
 <div class="container">
   <h1>Top Questions</h1>
-  <div id="feed"></div>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search questions..." oninput="filterQuestions()">
+  </div>
+
+  <!-- Questions feed -->
+  <div id="questions"></div>
 </div>
 
 <script src="app.js"></script>
 <script>
-// Sample data
-const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+// Load questions from localStorage
+let questions = JSON.parse(localStorage.getItem('questions') || '[]');
 
-function renderFeed() {
-  const feed = document.getElementById('feed');
-  feed.innerHTML = '';
+function renderQuestions(list = questions) {
+  const box = document.getElementById('questions');
+  box.innerHTML = '';
 
-  questions.forEach(q => {
+  list.forEach(q => {
     const div = document.createElement('div');
     div.className = 'card';
     div.innerHTML = `
@@ -42,21 +49,61 @@ function renderFeed() {
       <div class="actions">
         <button onclick="answer('${q.id}')">Answer</button>
       </div>
+      <div class="answers">${renderAnswers(q)}</div>
     `;
-    feed.appendChild(div);
+    box.appendChild(div);
   });
 }
 
-function answer(id) {
-  const ans = prompt('Your answer:');
-  if (!ans) return;
-  const idx = questions.findIndex(q => q.id === id);
-  questions[idx].answers.push(ans);
-  localStorage.setItem('questions', JSON.stringify(questions));
-  renderFeed();
+function renderAnswers(q) {
+  if (!q.answers.length) return '<p><em>No answers yet.</em></p>';
+  return q.answers.map((a, i) => `
+    <div class="card answer-card">
+      <p>${a.text}</p>
+      <small>by ${a.author}</small>
+      <div class="vote-box">
+        <span class="vote-btn" onclick="upvote('${q.id}', ${i})">⬆</span>
+        <strong>${a.votes || 0}</strong>
+        <span class="vote-btn" onclick="downvote('${q.id}', ${i})">⬇</span>
+      </div>
+    </div>
+  `).join('');
 }
 
-renderFeed();
+function answer(id) {
+  const ansText = prompt('Your answer:');
+  if (!ansText) return;
+  const idx = questions.findIndex(q => q.id === id);
+  const answerObj = { text: ansText, author: 'Anonymous', votes: 0 };
+  questions[idx].answers.push(answerObj);
+  localStorage.setItem('questions', JSON.stringify(questions));
+  renderQuestions();
+}
+
+function upvote(qId, ansIndex) {
+  const idx = questions.findIndex(q => q.id === qId);
+  questions[idx].answers[ansIndex].votes = (questions[idx].answers[ansIndex].votes || 0) + 1;
+  localStorage.setItem('questions', JSON.stringify(questions));
+  renderQuestions();
+}
+
+function downvote(qId, ansIndex) {
+  const idx = questions.findIndex(q => q.id === qId);
+  questions[idx].answers[ansIndex].votes = (questions[idx].answers[ansIndex].votes || 0) - 1;
+  localStorage.setItem('questions', JSON.stringify(questions));
+  renderQuestions();
+}
+
+function filterQuestions() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = questions.filter(q =>
+    q.title.toLowerCase().includes(search) || q.description.toLowerCase().includes(search)
+  );
+  renderQuestions(filtered);
+}
+
+// Initial render
+renderQuestions();
 </script>
 
 </body>
