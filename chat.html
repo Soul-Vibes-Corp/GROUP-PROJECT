@@ -13,19 +13,20 @@
 
 <h1>💬 CodeChat Forum — Public Chat</h1>
 
+<!-- Chat Box -->
 <div id="chat-box"></div>
-
 <input type="text" id="chat-message" placeholder="Type a message...">
 <button onclick="sendMessage()">Send</button>
 
 <button onclick="logout()">Logout</button>
 
 <script src="script.js"></script>
+
 <script>
-// Protect chat.html — force login check
+// Firebase auth check to force login
 firebase.auth().onAuthStateChanged(function(user) {
   if (!user) {
-    // If no user, send back to login.html
+    // If no user, send them back to login.html
     window.location.href = "login.html";
   }
 });
