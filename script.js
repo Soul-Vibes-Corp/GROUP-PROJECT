@@ -1,6 +1,6 @@
-// Your Firebase Config
+// Firebase Config
 const firebaseConfig = {
-  apiKey: "AIzaSyA0tfVT75kWle3uwz1HouHRQdEWyzW1YNU",
+   apiKey: "AIzaSyA0tfVT75kWle3uwz1HouHRQdEWyzW1YNU",
   authDomain: "chat-code-forum.firebaseapp.com",
   projectId: "chat-code-forum",
   storageBucket: "chat-code-forum.firebasestorage.app",
@@ -9,66 +9,106 @@ const firebaseConfig = {
   measurementId: "G-XJKWXHF8WN"
 };
 
-// Initialize Firebase
+// Init Firebase
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Log Out Function
-function logout() {
-  auth.signOut().then(() => {
-    alert("Logged out successfully!");
-    window.location.href = "login.html"; // Redirect to login page
-  }).catch((error) => {
-    alert(error.message); // Show error message if any
-  });
+// ========== Auth Functions ==========
+
+function login() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then(() => {
+      window.location.href = "index.html";
+    })
+    .catch(error => alert(error.message));
 }
 
-// Function to send message in chat
-function sendMessage() {
-  const message = document.getElementById('chat-message').value;
-  if (message !== "") {
-    const user = firebase.auth().currentUser;
-    db.collection('messages').add({
-      uid: user.uid,
-      displayName: user.displayName,
-      message: message,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-      document.getElementById('chat-message').value = "";
-    }).catch((error) => {
-      alert(error.message); // Show error message if any
+function signup() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const username = document.getElementById('username').value;
+
+  if (!username) {
+    alert("Please enter a username for Sign Up.");
+    return;
+  }
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(cred => {
+      // Save username to Firestore under user UID
+      return db.collection('users').doc(cred.user.uid).set({
+        username: username
+      });
+    })
+    .then(() => {
+      window.location.href = "index.html";
+    })
+    .catch(error => alert(error.message));
+}
+
+function logout() {
+  auth.signOut()
+    .then(() => {
+      window.location.href = "login.html";
     });
+}
+
+// ========== Protect Routes & Show Username ==========
+auth.onAuthStateChanged(user => {
+  const path = window.location.pathname;
+
+  if (user) {
+    if (path.includes('index.html')) {
+      // Load username from Firestore
+      db.collection('users').doc(user.uid).get()
+        .then(doc => {
+          const username = doc.data().username || "Anonymous";
+          document.getElementById('user-name').innerText = `Welcome, ${username}!`;
+        });
+    }
+  } else {
+    // If not logged in, force back to login.html
+    if (path.includes('index.html')) {
+      window.location.href = "login.html";
+    }
+  }
+});
+
+// ========== Send Message ==========
+function sendMessage() {
+  const messageInput = document.getElementById('chat-message');
+  const message = messageInput.value.trim();
+
+  if (message !== "") {
+    const chatBox = document.getElementById('chat-box');
+    const userName = document.getElementById('user-name').innerText;
+
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.innerHTML = `
+      <span class="message-user">${userName}:</span>
+      <span class="message-text">${message}</span>
+    `;
+
+    chatBox.appendChild(messageElement);
+    messageInput.value = "";
   }
 }
 
-// Fetch and display messages in real-time
-function fetchMessages() {
-  const chatBox = document.getElementById('chat-box');
-  db.collection('messages').orderBy('timestamp').onSnapshot((querySnapshot) => {
-    chatBox.innerHTML = ''; // Clear chat box before re-rendering
-    querySnapshot.forEach((doc) => {
-      const messageData = doc.data();
-      const messageElement = document.createElement('div');
-      messageElement.classList.add('message');
-      
-      const userName = document.createElement('span');
-      userName.classList.add('message-user');
-      userName.textContent = `${messageData.displayName}: `;
-      
-      const messageText = document.createElement('span');
-      messageText.classList.add('message-text');
-      messageText.textContent = messageData.message;
-      
-      messageElement.appendChild(userName);
-      messageElement.appendChild(messageText);
-      chatBox.appendChild(messageElement);
-      chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
+// ========== Edit Username ==========
+function editUsername() {
+  const newUsername = prompt("Enter your new username:");
+  if (newUsername) {
+    const user = auth.currentUser;
+    db.collection('users').doc(user.uid).update({
+      username: newUsername
+    }).then(() => {
+      document.getElementById('user-name').innerText = `Welcome, ${newUsername}!`;
+      alert("Username updated!");
     });
-  });
-}
-
-// Fetch messages when on chat page
-if (window.location.pathname === "/chat.html") {
-  fetchMessages();
+  }
 }
