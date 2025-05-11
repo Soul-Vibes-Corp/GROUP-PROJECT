@@ -1,1 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodeForum — Ask Question</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo"><strong>CodeForum</strong></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="ask.html">Ask</a>
+    <a href="profile.html">Profile</a>
+    <button onclick="toggleTheme()">🌓</button>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>Ask a Question</h1>
+
+  <form id="askForm">
+    <label>Title</label><br>
+    <input type="text" id="title" required><br><br>
+
+    <label>Description</label><br>
+    <textarea id="description" rows="5" required></textarea><br><br>
+
+    <label>Your Name</label><br>
+    <input type="text" id="author" required><br><br>
+
+    <button type="submit">Post Question</button>
+  </form>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+const form = document.getElementById('askForm');
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const title = document.getElementById('title').value.trim();
+  const description = document.getElementById('description').value.trim();
+  const author = document.getElementById('author').value.trim();
+
+  if (!title || !description || !author) return alert('Please fill all fields.');
+
+  const newQ = {
+    id: Date.now().toString(),
+    title,
+    description,
+    author,
+    answers: []
+  };
+
+  const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+  questions.push(newQ);
+  localStorage.setItem('questions', JSON.stringify(questions));
+
+  alert('Question posted!');
+  window.location.href = 'index.html';
+});
+</script>
+
+</body>
+</html>
 
