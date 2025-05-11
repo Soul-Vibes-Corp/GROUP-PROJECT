@@ -1,107 +1,117 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeChat Forum</title>
-  <link rel="stylesheet" href="style.css">
-  
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+<meta charset="UTF-8">
+<title>CodeChat Forum</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 </head>
+
 <body>
-  <header>
-    <div class="logo">🔥 CodeChat Forum</div>
-    <div class="user-info">
-      <img id="user-profile-pic" alt="Profile Picture">
-      <span id="user-name">Welcome, User!</span>
-      <button onclick="editUsername()">Edit Username</button>
-      <button onclick="logout()">Log Out</button>
-    </div>
-  </header>
+<header>
+  <div class="logo">🔥 CodeChat Forum</div>
+  <div class="user-panel">
+    <img id="user-profile-pic" alt="Profile Picture">
+    <span id="user-name"></span>
+    <button onclick="logout()">Log Out</button>
+  </div>
+</header>
 
-  <main>
-    <div id="chat-container">
-      <div id="chat-box"></div>
-      <div id="chat-input">
-        <input type="text" id="chat-message" placeholder="Type a message...">
-        <button onclick="sendMessage()">Send</button>
-      </div>
-    </div>
-  </main>
+<main>
+  <section id="ask-question">
+    <textarea id="question-input" placeholder="What do you want to ask?"></textarea>
+    <button onclick="postQuestion()">Post Question</button>
+  </section>
 
-  <script>
-    // Firebase config and initialization
-    const firebaseConfig = {
-      apiKey: "AIzaSyA0tfVT75kWle3uwz1HouHRQdEWyzW1YNU",
-  authDomain: "chat-code-forum.firebaseapp.com",
-  projectId: "chat-code-forum",
-  storageBucket: "chat-code-forum.firebasestorage.app",
-  messagingSenderId: "496765673859",
-  appId: "1:496765673859:web:6c2e6695be447d6e32d6b6",
-  measurementId: "G-XJKWXHF8WN"
-    };
-    
-    const app = firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    
-    // Handle user authentication
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        const userDoc = db.collection('users').doc(user.uid);
-        userDoc.get().then(doc => {
-          const userData = doc.data();
-          document.getElementById('user-name').textContent = userData.fullName;
-          document.getElementById('user-profile-pic').src = userData.profilePicture;
-        });
+  <section id="questions-feed"></section>
+</main>
 
-        // Load messages
-        db.collection('chats').orderBy('timestamp').onSnapshot(snapshot => {
-          document.getElementById('chat-box').innerHTML = '';
-          snapshot.forEach(doc => {
-            const msgData = doc.data();
-            const messageElement = document.createElement('div');
-            messageElement.textContent = `${msgData.userName}: ${msgData.message}`;
-            document.getElementById('chat-box').appendChild(messageElement);
-          });
-        });
-      } else {
-        window.location.href = 'login.html'; // Redirect to login page if not logged in
-      }
+<script src="firebase.js"></script>
+<script>
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      const userDoc = firebase.firestore().collection('users').doc(user.uid);
+      userDoc.get().then(doc => {
+        const data = doc.data();
+        document.getElementById('user-name').textContent = data.fullName;
+        document.getElementById('user-profile-pic').src = data.profilePicture;
+      });
+
+      loadQuestions();
+    } else {
+      window.location.href = 'login.html';
+    }
+  });
+
+  function postQuestion() {
+    const questionText = document.getElementById('question-input').value;
+    if (questionText) {
+      const user = firebase.auth().currentUser;
+      firebase.firestore().collection('questions').add({
+        question: questionText,
+        userId: user.uid,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      document.getElementById('question-input').value = '';
+    }
+  }
+
+  function loadQuestions() {
+    const feed = document.getElementById('questions-feed');
+    firebase.firestore().collection('questions').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      feed.innerHTML = '';
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const questionCard = document.createElement('div');
+        questionCard.className = 'question-card';
+        questionCard.innerHTML = `
+          <p>${data.question}</p>
+          <button onclick="answerQuestion('${doc.id}')">Answer</button>
+          <div id="answers-${doc.id}" class="answers-section"></div>
+        `;
+        feed.appendChild(questionCard);
+
+        loadAnswers(doc.id);
+      });
     });
-    
-    // Send message function
-    function sendMessage() {
-      const message = document.getElementById('chat-message').value;
-      if (message) {
-        db.collection('chats').add({
-          userName: firebase.auth().currentUser.displayName,
-          message: message,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        document.getElementById('chat-message').value = '';
-      }
-    }
-    
-    // Edit username function
-    function editUsername() {
-      const newUsername = prompt("Enter your new username:");
-      if (newUsername) {
-        const user = firebase.auth().currentUser;
-        const userDoc = db.collection('users').doc(user.uid);
-        userDoc.update({ fullName: newUsername });
-      }
-    }
-    
-    // Log out function
-    function logout() {
-      firebase.auth().signOut().then(() => {
-        window.location.href = 'login.html'; // Redirect to login page
+  }
+
+  function answerQuestion(questionId) {
+    const answer = prompt('Enter your answer:');
+    if (answer) {
+      const user = firebase.auth().currentUser;
+      firebase.firestore().collection('questions').doc(questionId).collection('answers').add({
+        answer: answer,
+        userId: user.uid,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
     }
-  </script>
+  }
+
+  function loadAnswers(questionId) {
+    const answersDiv = document.getElementById(`answers-${questionId}`);
+    firebase.firestore().collection('questions').doc(questionId).collection('answers').orderBy('timestamp')
+      .onSnapshot(snapshot => {
+        answersDiv.innerHTML = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const answerElem = document.createElement('p');
+          answerElem.textContent = `Answer: ${data.answer}`;
+          answersDiv.appendChild(answerElem);
+        });
+      });
+  }
+
+  function logout() {
+    firebase.auth().signOut().then(() => window.location.href = 'login.html');
+  }
+</script>
+
 </body>
 </html>
