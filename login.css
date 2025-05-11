@@ -1,128 +1,47 @@
-/* Global Reset and Font */
+/* Style for the login page */
 body {
-  font-family: 'Segoe UI', Roboto, sans-serif;
+  font-family: Arial, sans-serif;
+  background: #f0f0f0 url('https://www.example.com/background.jpg') no-repeat center center fixed;
+  background-size: cover;
   margin: 0;
   padding: 0;
-  background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(135deg, #667eea, #764ba2);
-  background-size: cover;
-  color: #333;
-  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-/* Center everything in the page */
-body > h1, #auth-section, #profile-section, #users-section, #chat-section, #code-section {
-  max-width: 500px;
-  margin: 20px auto;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
-
-/* Main Title */
 h1 {
   text-align: center;
-  color: #fff;
-  text-shadow: 0 2px 5px rgba(0,0,0,0.3);
-  margin-top: 40px;
-}
-
-/* Section Titles */
-h2 {
-  text-align: center;
-  color: #4a4a4a;
-  margin-bottom: 15px;
-}
-
-/* Inputs and Buttons */
-input, textarea, button {
-  display: block;
-  margin: 10px auto;
-  padding: 12px;
-  width: 90%;
-  max-width: 400px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  box-sizing: border-box;
-  font-size: 15px;
-}
-
-/* Inputs */
-input, textarea {
-  background: #f9f9f9;
-  transition: all 0.3s;
-}
-
-input:focus, textarea:focus {
-  border-color: #667eea;
-  outline: none;
-  background: #fff;
-  box-shadow: 0 0 5px rgba(102, 126, 234, 0.4);
-}
-
-/* Buttons */
-button {
-  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
+  font-size: 3em;
+}
+
+#auth-section {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+}
+
+input {
+  margin: 10px 0;
+  padding: 10px;
+  width: 250px;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  margin: 10px 0;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 5px;
   border: none;
   cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s, transform 0.2s;
 }
 
 button:hover {
-  background: linear-gradient(135deg, #5a67d8, #6b46c1);
-  transform: translateY(-2px);
-}
-
-/* Chat Box */
-#chat-box {
-  border: 1px solid #ccc;
-  height: 200px;
-  overflow-y: scroll;
-  background: #fdfdfd;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-}
-
-/* Chat Message */
-.message {
-  border-bottom: 1px solid #eee;
-  padding: 8px 5px;
-  word-wrap: break-word;
-}
-
-/* Prism Code Block */
-pre {
-  background: #272822;
-  color: #f8f8f2;
-  padding: 12px;
-  border-radius: 8px;
-  overflow-x: auto;
-}
-
-/* Hidden class */
-.hidden {
-  display: none;
-}
-
-/* Users List styling */
-#users-list {
-  list-style: none;
-  padding: 0;
-}
-
-#users-list li {
-  background: #efefef;
-  padding: 8px;
-  margin: 5px 0;
-  border-radius: 6px;
-}
-
-/* Profile info text */
-#my-profile-info {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #555;
+  background-color: #45a049;
 }
