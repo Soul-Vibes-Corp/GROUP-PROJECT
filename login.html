@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login - Modern Chat</title>
+  <title>Login - CodeChat Forum</title>
   <link rel="stylesheet" href="style.css" />
-
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
@@ -14,16 +13,17 @@
 <body class="login-container">
 
   <section id="auth-section">
-    <h1>🔥 CodeChat Forum - Login</h1>
-
+    <h1>Welcome to CodeChat Forum</h1>
     <input type="email" id="email" placeholder="Email" required />
     <input type="password" id="password" placeholder="Password" required />
-    
+
+    <!-- Username input for Sign Up only -->
+    <input type="text" id="username" placeholder="Username (for Sign Up)" />
+
     <button onclick="login()">Log In</button>
     <button onclick="signup()">Sign Up</button>
   </section>
 
-  <!-- Script: Firebase Authentication -->
   <script src="script.js"></script>
 
 </body>
