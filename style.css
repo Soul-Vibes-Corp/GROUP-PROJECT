@@ -1,91 +1,99 @@
+/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f9fafb;
+  --text: #111827;
+  --text-light: #4b5563;
+  --primary: #3b82f6;
+  --card: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.05);
+
+  --dark-bg: #1f2937;
+  --dark-bg-alt: #111827;
+  --dark-text: #f3f4f6;
+  --dark-text-light: #9ca3af;
+  --dark-card: #374151;
+}
+
+[data-theme="dark"] {
+  --bg: var(--dark-bg);
+  --bg-alt: var(--dark-bg-alt);
+  --text: var(--dark-text);
+  --text-light: var(--dark-text-light);
+  --card: var(--dark-card);
+  --shadow: rgba(255, 255, 255, 0.05);
+}
+
 body {
-  font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  background: #f4f4f4;
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
 }
 
 header {
+  background: var(--bg-alt);
+  padding: 0.75rem 1.5rem;
   display: flex;
   justify-content: space-between;
-  background: #fff;
-  padding: 10px 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.user-panel {
-  display: flex;
   align-items: center;
-  gap: 10px;
+  box-shadow: 0 1px 3px var(--shadow);
 }
 
-.user-panel img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+nav a {
+  margin-right: 1rem;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
 }
 
-main {
-  max-width: 800px;
+nav a:hover {
+  color: var(--primary);
+}
+
+.container {
+  max-width: 700px;
   margin: auto;
-  padding: 20px;
+  padding: 1.5rem;
 }
 
-#ask-question textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  resize: none;
-  margin-bottom: 10px;
+.card {
+  background: var(--card);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px var(--shadow);
+  margin-bottom: 1rem;
 }
 
-.question-card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  margin-top: 15px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+button, input, textarea {
+  font-family: inherit;
+  border: 1px solid var(--text-light);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
 }
 
-.answers-section {
-  margin-top: 10px;
-  padding-left: 10px;
-  border-left: 2px solid #ddd;
-}
-
-.login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #ffffff;
-}
-
-.login-container {
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-}
-
-.login-container input {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.login-container button {
-  padding: 12px;
-  background: #007BFF;
+button {
+  background: var(--primary);
   color: white;
   border: none;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+input, textarea {
   width: 100%;
-  border-radius: 8px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+small {
+  color: var(--text-light);
 }
