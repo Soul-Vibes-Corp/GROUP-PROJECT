@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CodeChat Forum — Login</title>
-  <link rel="stylesheet" href="login.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Modern Chat</title>
+  <link rel="stylesheet" href="style.css" />
+
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 </head>
-<body>
+<body class="login-container">
 
-  <h1>🔥 CodeChat Forum - Login</h1>
+  <section id="auth-section">
+    <h1>🔥 CodeChat Forum - Login</h1>
 
-  <!-- Auth Section -->
-  <div id="auth-section">
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Password" required>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    
     <button onclick="login()">Log In</button>
     <button onclick="signup()">Sign Up</button>
-  </div>
+  </section>
 
   <!-- Script: Firebase Authentication -->
   <script src="script.js"></script>
