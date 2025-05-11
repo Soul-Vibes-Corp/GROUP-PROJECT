@@ -47,3 +47,50 @@ signUpForm.addEventListener('submit', async (event) => {
     console.error("Error signing up: ", error);
   }
 });
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const chatBox = document.getElementById('chat-box');
+const chatMessageInput = document.getElementById('chat-message');
+const sendButton = document.getElementById('send-btn');
+const userName = document.getElementById('user-name');
+const userProfilePic = document.getElementById('user-profile-pic');
+
+// Ensure the user is authenticated
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    // Fetch user profile data
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    const userData = userDoc.data();
+    userName.textContent = userData.fullName;
+    userProfilePic.src = userData.profilePicture;
+
+    // Load chat history
+    const chatRef = db.collection('chats');
+    chatRef.orderBy('timestamp').onSnapshot(snapshot => {
+      chatBox.innerHTML = ''; // Clear the chat box
+      snapshot.forEach(doc => {
+        const msgData = doc.data();
+        const messageElement = document.createElement('div');
+        messageElement.textContent = `${msgData.userName}: ${msgData.message}`;
+        chatBox.appendChild(messageElement);
+      });
+    });
+
+    // Send new messages
+    sendButton.addEventListener('click', async () => {
+      const message = chatMessageInput.value;
+      if (message) {
+        await db.collection('chats').add({
+          userName: userData.fullName,
+          message: message,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        chatMessageInput.value = ''; // Clear input field
+      }
+    });
+  } else {
+    window.location.href = "login.html"; // Redirect to login if user is not authenticated
+  }
+});
