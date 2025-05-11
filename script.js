@@ -14,47 +14,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// Function to handle Sign Up
-function signup() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-  
-  if (email !== "" && password !== "") {
-    auth.createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        // Sign Up successful, redirect to profile page
-        alert("Sign Up Successful!");
-        window.location.href = "profile.html"; // Redirect to profile page
-      })
-      .catch((error) => {
-        alert(error.message); // Show error message if any
-      });
-  } else {
-    alert("Please enter email and password");
-  }
-}
-
-// Function to handle Log In
-function login() {
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
-
-  if (email !== "" && password !== "") {
-    auth.signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        // Log In successful, redirect to chat forum
-        alert("Login Successful!");
-        window.location.href = "chat.html"; // Redirect to chat page
-      })
-      .catch((error) => {
-        alert(error.message); // Show error message if any
-      });
-  } else {
-    alert("Please enter email and password");
-  }
-}
-
-// Function to handle Log Out
+// Log Out Function
 function logout() {
   auth.signOut().then(() => {
     alert("Logged out successfully!");
@@ -64,112 +24,51 @@ function logout() {
   });
 }
 
-// Function to update user profile (username and picture)
-function updateProfile() {
-  const user = firebase.auth().currentUser;
-  const username = document.getElementById('username').value;
-  const profilePic = document.getElementById('profile-pic').files[0];
-
-  if (username !== "") {
-    user.updateProfile({
-      displayName: username
+// Function to send message in chat
+function sendMessage() {
+  const message = document.getElementById('chat-message').value;
+  if (message !== "") {
+    const user = firebase.auth().currentUser;
+    db.collection('messages').add({
+      uid: user.uid,
+      displayName: user.displayName,
+      message: message,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
-      alert("Profile updated successfully!");
-      saveProfilePic(profilePic);
+      document.getElementById('chat-message').value = "";
     }).catch((error) => {
-      alert(error.message);
-    });
-  } else {
-    alert("Please enter a username");
-  }
-}
-
-// Function to save profile picture to Firebase Storage
-function saveProfilePic(profilePic) {
-  if (profilePic) {
-    const storageRef = firebase.storage().ref();
-    const picRef = storageRef.child(`profile_pics/${firebase.auth().currentUser.uid}.jpg`);
-
-    picRef.put(profilePic).then(() => {
-      picRef.getDownloadURL().then((url) => {
-        firebase.auth().currentUser.updateProfile({
-          photoURL: url
-        }).then(() => {
-          alert("Profile picture uploaded!");
-        }).catch((error) => {
-          alert(error.message);
-        });
-      });
-    }).catch((error) => {
-      alert(error.message);
+      alert(error.message); // Show error message if any
     });
   }
 }
 
-// Function to display all messages in the chat forum
-function displayMessages() {
+// Fetch and display messages in real-time
+function fetchMessages() {
   const chatBox = document.getElementById('chat-box');
-
-  db.collection("messages").orderBy("timestamp", "asc").onSnapshot((querySnapshot) => {
-    chatBox.innerHTML = ""; // Clear existing messages
-
+  db.collection('messages').orderBy('timestamp').onSnapshot((querySnapshot) => {
+    chatBox.innerHTML = ''; // Clear chat box before re-rendering
     querySnapshot.forEach((doc) => {
       const messageData = doc.data();
-      const messageDiv = document.createElement("div");
-      messageDiv.classList.add("message");
-      messageDiv.innerHTML = `<strong>${messageData.user}</strong>: ${messageData.message}`;
-      chatBox.appendChild(messageDiv);
+      const messageElement = document.createElement('div');
+      messageElement.classList.add('message');
+      
+      const userName = document.createElement('span');
+      userName.classList.add('message-user');
+      userName.textContent = `${messageData.displayName}: `;
+      
+      const messageText = document.createElement('span');
+      messageText.classList.add('message-text');
+      messageText.textContent = messageData.message;
+      
+      messageElement.appendChild(userName);
+      messageElement.appendChild(messageText);
+      chatBox.appendChild(messageElement);
+      chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the latest message
     });
   });
 }
 
-// Function to send a message to the Firestore database
-function sendMessage() {
-  const message = document.getElementById('chat-message').value;
-  const user = firebase.auth().currentUser;
-
-  if (message !== "") {
-    db.collection("messages").add({
-      message: message,
-      user: user.displayName || user.email, // Use displayName if available, else email
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    }).then(() => {
-      document.getElementById('chat-message').value = ""; // Clear the input field
-      displayMessages(); // Refresh the chat
-    }).catch((error) => {
-      alert("Error sending message: " + error.message);
-    });
-  }
+// Fetch messages when on chat page
+if (window.location.pathname === "/chat.html") {
+  fetchMessages();
 }
-
-// Function to handle username setting on first login
-function setUsername() {
-  const user = firebase.auth().currentUser;
-  const username = document.getElementById('username').value;
-
-  if (username && user) {
-    user.updateProfile({ displayName: username })
-      .then(() => {
-        alert("Username set successfully!");
-        window.location.href = "chat.html"; // Redirect to chat page
-      }).catch((error) => {
-        alert(error.message);
-      });
-  }
-}
-
-// On page load, check if user is authenticated
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    // User is logged in, show the chat or profile page
-    if (window.location.pathname.includes("chat.html")) {
-      displayMessages(); // Display chat messages if on the chat page
-    }
-    // You can add other page redirects based on authentication state here
-  } else {
-    // User is not logged in, redirect to login page
-    if (!window.location.pathname.includes("login.html")) {
-      window.location.href = "login.html";
-    }
-  }
-});
