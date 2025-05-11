@@ -1,4 +1,3 @@
-<!-- chat.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,29 +7,30 @@
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
 </head>
 <body>
 
-<h1>💬 CodeChat Forum — Public Chat</h1>
+  <h1>💬 CodeChat Forum — Public Chat</h1>
 
-<!-- Chat Box -->
-<div id="chat-box"></div>
-<input type="text" id="chat-message" placeholder="Type a message...">
-<button onclick="sendMessage()">Send</button>
+  <!-- Chat Box -->
+  <div id="chat-box"></div>
+  <input type="text" id="chat-message" placeholder="Type a message...">
+  <button onclick="sendMessage()">Send</button>
 
-<button onclick="logout()">Logout</button>
+  <button onclick="logout()">Logout</button>
 
-<script src="script.js"></script>
+  <script src="script.js"></script>
 
-<script>
-// Firebase auth check to force login
-firebase.auth().onAuthStateChanged(function(user) {
-  if (!user) {
-    // If no user, send them back to login.html
-    window.location.href = "login.html";
-  }
-});
-</script>
+  <script>
+    // Firebase auth check to force login
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) {
+        // If no user, send them back to login.html
+        window.location.href = "login.html";
+      }
+    });
+  </script>
 
 </body>
 </html>
