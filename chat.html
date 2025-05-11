@@ -2,35 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CodeChat Forum — Chat</title>
-  <link rel="stylesheet" href="login.css">
-  <!-- Firebase -->
+  <title>Chat - CodeChat Forum</title>
+  <link rel="stylesheet" href="chat.css">
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js"></script>
 </head>
 <body>
 
-  <h1>💬 CodeChat Forum — Public Chat</h1>
+  <header>
+    <div class="logo">🔥 CodeChat Forum</div>
+    <div class="user-info">
+      <span id="user-name">Welcome, User!</span>
+      <button onclick="logout()">Log Out</button>
+    </div>
+  </header>
 
-  <!-- Chat Box -->
-  <div id="chat-box"></div>
-  <input type="text" id="chat-message" placeholder="Type a message...">
-  <button onclick="sendMessage()">Send</button>
-
-  <button onclick="logout()">Logout</button>
+  <main>
+    <div id="chat-container">
+      <div id="chat-box"></div>
+      <div id="chat-input">
+        <input type="text" id="chat-message" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </main>
 
   <script src="script.js"></script>
-
-  <script>
-    // Firebase auth check to force login
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (!user) {
-        // If no user, send them back to login.html
-        window.location.href = "login.html";
-      }
-    });
-  </script>
-
 </body>
 </html>
