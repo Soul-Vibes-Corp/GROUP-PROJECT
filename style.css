@@ -1,16 +1,25 @@
-/* ======= Base Styles ======= */
+/* ================= Base Styles ================= */
+:root {
+  --teal: #008080;
+  --teal-dark: #004f4f;
+  --teal-light: #e0f7f7;
+  --coral: #ff6b6b;
+  --sand: #f5f0e1;
+  --dark-bg: #20232a;
+  --accent-yellow: yellow;
+
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   background: #f5f5f5;
   color: #333;
+  transition: background-color 0.5s ease, background-image 0.5s ease, color 0.3s ease;
 }
 
-:root {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* ======= Theme Styles ======= */
+/* ================= Theme Styles ================= */
 [data-theme="light"] {
   background-color: #ffffff;
   color: #000000;
@@ -21,41 +30,41 @@ body {
   color: #f0f0f0;
 }
 
-/* ======= Layout & Container ======= */
+/* ================= Layout ================= */
 .container {
   max-width: 800px;
   margin: auto;
   padding: 20px;
 }
 
-/* ======= Header & Navigation ======= */
-header {
-  background: #20232a;
-  color: #fff;
+/* ================= Header & Navigation ================= */
+header, nav {
+  background-color: var(--dark-bg);
+  color: white;
   padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-nav a {
-  color: #fff;
+.nav-link {
+  color: white;
   text-decoration: none;
   margin-right: 15px;
 }
 
 .nav-link.active {
-  border-bottom: 2px solid yellow;
+  border-bottom: 2px solid var(--accent-yellow);
 }
 
 nav button {
   background: none;
   border: none;
-  color: #fff;
+  color: white;
   cursor: pointer;
 }
 
-/* ======= Card Component ======= */
+/* ================= Card Component ================= */
 .card {
   background: #fff;
   border-radius: 8px;
@@ -64,7 +73,7 @@ nav button {
   margin-bottom: 15px;
 }
 
-/* ======= Buttons ======= */
+/* ================= Buttons ================= */
 button {
   background: #0077ff;
   color: #fff;
@@ -90,7 +99,7 @@ button:hover {
   background: #ddd;
 }
 
-/* ======= Forms ======= */
+/* ================= Forms ================= */
 input,
 textarea {
   width: 100%;
@@ -100,7 +109,7 @@ textarea {
   border: 1px solid #ccc;
 }
 
-/* ======= Utility Classes ======= */
+/* ================= Utility Classes ================= */
 .vote-box {
   display: inline-flex;
   align-items: center;
@@ -122,50 +131,40 @@ textarea {
 .stats {
   margin-top: 10px;
 }
-:root {
-  --teal: #008080;
-  --teal-dark: #004f4f;
-  --teal-light: #e0f7f7;
-  --coral: #ff6b6b;
-  --sand: #f5f0e1;
-}
 
-/* Global transition */
-body {
-  transition: background 0.5s ease, color 0.3s ease;
-}
-
-/* Main App Background */
+/* ================= App Backgrounds ================= */
 .app-background {
   background-color: var(--teal-light);
   background-image: url('/patterns/noise.png');
-  background-size: cover;
+  background-repeat: repeat;
+  background-size: auto;
 }
 
-/* Home */
+/* ================= Section Backgrounds ================= */
 .page-home {
   background-color: var(--teal);
   background-image: url('/patterns/waves.png');
-  background-size: 200px;
+  background-repeat: repeat;
+  background-size: auto;
 }
 
-/* Ask */
 .page-ask {
   background-color: var(--coral);
   background-image: url('/patterns/dots.png');
-  background-size: 100px;
+  background-repeat: repeat;
+  background-size: auto;
 }
 
-/* Profile */
 .page-profile {
   background-color: var(--sand);
   background-image: url('/patterns/linen.png');
-  background-size: 150px;
+  background-repeat: repeat;
+  background-size: auto;
 }
 
-/* Codespace */
 .page-codespace {
   background-color: var(--teal-dark);
   background-image: url('/patterns/grid.png');
-  background-size: 120px;
+  background-repeat: repeat;
+  background-size: auto;
 }
