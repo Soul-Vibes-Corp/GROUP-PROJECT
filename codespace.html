@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodeSpace</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+<header>
+  <div class="logo" onclick="window.location.reload();"><strong>CodeForum</strong></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="ask.html">Ask</a>
+    <a href="profile.html">Profile</a>
+    <a href="codespace.html">Codespace</a>
+    <button onclick="toggleTheme()">🌓</button>
+  </nav>
+</header>
+
+<div class="container">
+  <h1>Welcome to Codespace</h1>
+
+  <!-- Create new codespace -->
+  <div>
+    <button onclick="createCodespace()">Create New Codespace</button>
+  </div>
+
+  <div id="codespace-container" style="display:none;">
+    <h2>Your Codespace</h2>
+    <textarea id="codeEditor" placeholder="Write your code here..."></textarea>
+    <div>
+      <input type="text" id="password" placeholder="Enter password to allow other users to edit">
+      <button onclick="saveCodespace()">Save Code</button>
+    </div>
+    <div id="chat-container">
+      <h3>Chat with Others</h3>
+      <textarea id="chatBox" placeholder="Type a message..." oninput="updateChat()"></textarea>
+      <button onclick="sendMessage()">Send</button>
+      <div id="chatMessages"></div>
+    </div>
+  </div>
+
+  <!-- Show the codespace details -->
+  <div id="codespaceDetails"></div>
+</div>
+
+<script src="app.js"></script>
+
+<script>
+// Function to create a new codespace
+let codespaceId = null;
+let currentPassword = '';
+let messages = [];
+
+function createCodespace() {
+  // Generate a random 4-10 digit password
+  const passwordLength = Math.floor(Math.random() * 7) + 4;
+  currentPassword = Array.from({ length: passwordLength }, () => Math.floor(Math.random() * 10)).join('');
+
+  alert(`Your Codespace password: ${currentPassword}`);
+
+  codespaceId = Date.now(); // Use timestamp as the codespace identifier
+  document.getElementById('codespace-container').style.display = 'block';
+  document.getElementById('chat-container').style.display = 'block';
+}
+
+function saveCodespace() {
+  const codeContent = document.getElementById('codeEditor').value;
+  const codespace = {
+    id: codespaceId,
+    code: codeContent,
+    password: currentPassword,
+  };
+  localStorage.setItem(`codespace_${codespaceId}`, JSON.stringify(codespace));
+  alert('Codespace saved!');
+}
+
+function sendMessage() {
+  const message = document.getElementById('chatBox').value;
+  if (message) {
+    messages.push(message);
+    updateChat();
+  }
+  document.getElementById('chatBox').value = '';
+}
+
+function updateChat() {
+  const chatMessages = document.getElementById('chatMessages');
+  chatMessages.innerHTML = messages.map(msg => `<p>${msg}</p>`).join('');
+}
+</script>
+
+</body>
+</html>
