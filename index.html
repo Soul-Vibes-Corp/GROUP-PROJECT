@@ -48,6 +48,7 @@ function renderQuestions(list = questions) {
       <small>Asked by ${q.author} — <strong>${q.answers.length}</strong> answers</small>
       <div class="actions">
         <button onclick="answer('${q.id}')">Answer</button>
+        <button onclick="deleteQuestion('${q.id}')">Delete</button>
       </div>
       <div class="answers">${renderAnswers(q)}</div>
     `;
@@ -100,6 +101,18 @@ function filterQuestions() {
     q.title.toLowerCase().includes(search) || q.description.toLowerCase().includes(search)
   );
   renderQuestions(filtered);
+}
+
+function deleteQuestion(id) {
+  const adminCode = prompt("Enter admin code to delete this question:");
+  if (adminCode === '1997') {
+    questions = questions.filter(q => q.id !== id);
+    localStorage.setItem('questions', JSON.stringify(questions));
+    renderQuestions();
+    alert('Question deleted successfully.');
+  } else {
+    alert('Incorrect admin code.');
+  }
 }
 
 // Initial render
