@@ -51,6 +51,22 @@ function deleteQuestion(id) {
   renderYourQuestions?.(); // For profile page
 }
 
+// Assuming this function exists in app.js
+function accessCodespace(id, password) {
+  const codespace = JSON.parse(localStorage.getItem(`codespace_${id}`));
+  if (!codespace) {
+    alert("Codespace not found!");
+    return;
+  }
+  if (codespace.password === password) {
+    alert("Access granted!");
+    // Load the codespace and allow editing
+  } else {
+    alert("Incorrect password!");
+  }
+}
+
+
 // Render user's own questions
 function renderYourQuestions() {
   const yourQ = document.getElementById('yourQuestions');
