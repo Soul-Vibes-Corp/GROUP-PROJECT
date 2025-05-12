@@ -1,72 +1,24 @@
-// Toggle dark mode
+// ================================
+// Theme toggle & persistence
+// ================================
 function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme');
-  document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-  localStorage.setItem('theme', current === 'dark' ? 'light' : 'dark');
+  const root = document.documentElement;
+  const currentTheme = root.getAttribute('data-theme') || 'light';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  root.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
 }
 
-// Load saved theme
-(function() {
-  const saved = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-theme', saved);
+// Apply saved theme on page load
+(function applySavedTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
 })();
 
-// Vote logic (localStorage-based)
-function upvote(questionId, answerIndex) {
-  const questions = JSON.parse(localStorage.getItem('questions') || '[]');
-  questions.forEach(q => {
-    if (q.id === questionId) {
-      q.answers[answerIndex].votes = (q.answers[answerIndex].votes || 0) + 1;
-    }
-  });
-  localStorage.setItem('questions', JSON.stringify(questions));
-  location.reload();
-}
-
-function downvote(questionId, answerIndex) {
-  const questions = JSON.parse(localStorage.getItem('questions') || '[]');
-  questions.forEach(q => {
-    if (q.id === questionId) {
-      q.answers[answerIndex].votes = (q.answers[answerIndex].votes || 0) - 1;
-    }
-  });
-  localStorage.setItem('questions', JSON.stringify(questions));
-  location.reload();
-}
-
-// Delete Question
-function deleteQuestion(id) {
-  const code = prompt('Enter admin code to delete this question:');
-  if (code !== '1997') {
-    alert('Incorrect admin code. Deletion cancelled.');
-    return;
-  }
-
-  let questions = JSON.parse(localStorage.getItem('questions') || '[]');
-  questions = questions.filter(q => q.id !== id);
-  localStorage.setItem('questions', JSON.stringify(questions));
-
-  renderFeed?.();  // For homepage
-  renderQuestions?.(); // For search filtered page
-  renderYourQuestions?.(); // For profile page
-}
-
-// Assuming this function exists in app.js
-function accessCodespace(id, password) {
-  const codespace = JSON.parse(localStorage.getItem(`codespace_${id}`));
-  if (!codespace) {
-    alert("Codespace not found!");
-    return;
-  }
-  if (codespace.password === password) {
-    alert("Access granted!");
-    // Load the codespace and allow editing
-  } else {
-    alert("Incorrect password!");
-  }
-}
-
-// Highlight active nav link
+// ================================
+// Navigation active link highlight
+// ================================
 (function highlightActiveNav() {
   const links = document.querySelectorAll('.nav-link');
   const currentPage = location.pathname.split('/').pop();
@@ -78,8 +30,67 @@ function accessCodespace(id, password) {
   });
 })();
 
+// ================================
+// Voting logic (upvote / downvote)
+// ================================
+function updateVote(questionId, answerIndex, change) {
+  const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+  questions.forEach(q => {
+    if (q.id === questionId) {
+      q.answers[answerIndex].votes = (q.answers[answerIndex].votes || 0) + change;
+    }
+  });
+  localStorage.setItem('questions', JSON.stringify(questions));
+  location.reload();
+}
 
-// Render user's own questions
+function upvote(questionId, answerIndex) {
+  updateVote(questionId, answerIndex, 1);
+}
+
+function downvote(questionId, answerIndex) {
+  updateVote(questionId, answerIndex, -1);
+}
+
+// ================================
+// Delete question (admin code)
+// ================================
+function deleteQuestion(id) {
+  const code = prompt('Enter admin code to delete this question:');
+  if (code !== '1997') {
+    alert('Incorrect admin code. Deletion cancelled.');
+    return;
+  }
+
+  let questions = JSON.parse(localStorage.getItem('questions') || '[]');
+  questions = questions.filter(q => q.id !== id);
+  localStorage.setItem('questions', JSON.stringify(questions));
+
+  renderFeed?.();          // Home feed
+  renderQuestions?.();     // Search page
+  renderYourQuestions?.(); // Profile page
+}
+
+// ================================
+// Codespace access
+// ================================
+function accessCodespace(id, password) {
+  const codespace = JSON.parse(localStorage.getItem(`codespace_${id}`));
+  if (!codespace) {
+    alert("Codespace not found!");
+    return;
+  }
+  if (codespace.password === password) {
+    alert("Access granted!");
+    // You can add logic here to load the codespace content for editing
+  } else {
+    alert("Incorrect password!");
+  }
+}
+
+// ================================
+// Render user's own questions (Profile page)
+// ================================
 function renderYourQuestions() {
   const yourQ = document.getElementById('yourQuestions');
   const name = localStorage.getItem('username');
@@ -111,4 +122,7 @@ function renderYourQuestions() {
   });
 }
 
-renderYourQuestions();
+// Automatically call this if #yourQuestions exists (profile page)
+if (document.getElementById('yourQuestions')) {
+  renderYourQuestions();
+}
