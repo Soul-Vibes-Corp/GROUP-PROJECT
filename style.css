@@ -122,3 +122,50 @@ textarea {
 .stats {
   margin-top: 10px;
 }
+:root {
+  --teal: #008080;
+  --teal-dark: #004f4f;
+  --teal-light: #e0f7f7;
+  --coral: #ff6b6b;
+  --sand: #f5f0e1;
+}
+
+/* Global transition */
+body {
+  transition: background 0.5s ease, color 0.3s ease;
+}
+
+/* Main App Background */
+.app-background {
+  background-color: var(--teal-light);
+  background-image: url('/patterns/noise.png');
+  background-size: cover;
+}
+
+/* Home */
+.page-home {
+  background-color: var(--teal);
+  background-image: url('/patterns/waves.png');
+  background-size: 200px;
+}
+
+/* Ask */
+.page-ask {
+  background-color: var(--coral);
+  background-image: url('/patterns/dots.png');
+  background-size: 100px;
+}
+
+/* Profile */
+.page-profile {
+  background-color: var(--sand);
+  background-image: url('/patterns/linen.png');
+  background-size: 150px;
+}
+
+/* Codespace */
+.page-codespace {
+  background-color: var(--teal-dark);
+  background-image: url('/patterns/grid.png');
+  background-size: 120px;
+}
