@@ -1,4 +1,4 @@
-/* style.css */
+/* ======= Base Styles ======= */
 body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
@@ -6,50 +6,68 @@ body {
   color: #333;
 }
 
-header {
-  background: #20232a;
-  color: white;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+:root {
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.nav-link.active {
-  border-bottom: 2px solid yellow;
+/* ======= Theme Styles ======= */
+[data-theme="light"] {
+  background-color: #ffffff;
+  color: #000000;
 }
 
-
-nav a {
-  color: white;
-  text-decoration: none;
-  margin-right: 15px;
+[data-theme="dark"] {
+  background-color: #121212;
+  color: #f0f0f0;
 }
 
-nav button {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
+/* ======= Layout & Container ======= */
 .container {
   max-width: 800px;
   margin: auto;
   padding: 20px;
 }
 
+/* ======= Header & Navigation ======= */
+header {
+  background: #20232a;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 15px;
+}
+
+.nav-link.active {
+  border-bottom: 2px solid yellow;
+}
+
+nav button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ======= Card Component ======= */
 .card {
-  background: white;
+  background: #fff;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   padding: 15px;
   margin-bottom: 15px;
 }
 
+/* ======= Buttons ======= */
 button {
   background: #0077ff;
-  color: white;
+  color: #fff;
   border: none;
   padding: 8px 14px;
   border-radius: 4px;
@@ -58,21 +76,6 @@ button {
 
 button:hover {
   background: #005dd1;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.vote-box {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 5px;
 }
 
 .vote-btn {
@@ -85,6 +88,24 @@ input, textarea {
 
 .vote-btn:hover {
   background: #ddd;
+}
+
+/* ======= Forms ======= */
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* ======= Utility Classes ======= */
+.vote-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
 }
 
 .search-bar {
